@@ -970,7 +970,7 @@ export default function MembershipForm() {
 
                   {/* Adhar Number */}
                   <div className="form-group">
-                    <label className="text-[#f5f5f5]/70 text-base font-medium mb-2 block">Adhar Number</label>
+                    <label className="text-[#f5f5f5]/70 text-base font-medium mb-2 block">Aadhar Number</label>
                     <input
                       type="text"
                       className={`w-full bg-transparent border ${adharError ? "border-red-500" : "border-[#2b2b2b]"} rounded-md px-3 py-2 text-gray-200 focus:outline-none focus:border-purple-500 transition-colors placeholder:font-thin`}
