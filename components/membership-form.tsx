@@ -681,7 +681,7 @@ export default function MembershipForm() {
           {page === 1 ? (
             <>
               {/* AUTHORITIES & ACCESS SECTION */}
-              <div className="bg-[#f5f5f5]/10 backdrop-blur-[20px] border border-[#2b2b2b80] gradient-border-top rounded-lg !pt-[1px]  md:p-8 md:mb-8 p-4 mb-4">
+              <div className="relative z-[100] bg-[#f5f5f5]/10 backdrop-blur-[20px] border border-[#2b2b2b80] gradient-border-top rounded-lg !pt-[1px]  md:p-8 md:mb-8 p-4 mb-4">
                 {/* Removed section heading */}
 
                 <div className="space-y-8">
