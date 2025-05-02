@@ -264,6 +264,11 @@ button:active {
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
 }
 
+
+/* For WebKit-based browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+  display: none;
+}
 /* Complete calendar styling overhaul */
 /* Force dark background and light text for all calendar elements */
 .react-calendar {
