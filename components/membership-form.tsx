@@ -979,7 +979,7 @@ export default function MembershipForm() {
                       onChange={(e) => {
                         const value = e.target.value.replace(/\D/g, "").slice(0, 12) // Only allow digits, max 12
                         setAdharNo(value)
-                        setAdharError(value && !validateAdharNumber(value) ? "Adhar number must be 12 digits" : null)
+                        setAdharError(value && !validateAdharNumber(value) ? "Aadhar number must be 12 digits" : null)
                       }}
                     />
                     {adharError && <p className="text-red-400 text-sm mt-1">{adharError}</p>}
