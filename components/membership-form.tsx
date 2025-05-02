@@ -205,28 +205,43 @@ export default function MembershipForm() {
     fetchCities()
   }, [])
 
-  // Calculate expiration date when joining date changes
-  useEffect(() => {
-    if (joiningDate) {
-      // Create a new date with the same day and month but next year
-      const nextYear = new Date(joiningDate)
-      nextYear.setFullYear(nextYear.getFullYear() + 1)
+  // Update the date handling functions to ensure dates can be changed properly
 
-      // Check if it's February 29 in a leap year
-      const isFebruary29 = joiningDate.getMonth() === 1 && joiningDate.getDate() === 29
-      const isLeapYear = (year: number) => {
-        return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0
-      }
+  // Find the handleJoiningDateChange function and replace it with this improved version:
+  const handleJoiningDateChange = (date: Date) => {
+    setJoiningDate(date)
 
-      if (isFebruary29 && !isLeapYear(nextYear.getFullYear())) {
-        // If it's Feb 29 and next year is not a leap year, use March 1
-        nextYear.setMonth(2) // March (0-indexed)
-        nextYear.setDate(1) // 1st day
-      }
+    // Recalculate expiration date when joining date changes
+    const nextYear = new Date(date)
+    nextYear.setFullYear(nextYear.getFullYear() + 1)
 
-      setExpirationDate(nextYear)
+    // Check if it's February 29 in a leap year
+    const isFebruary29 = date.getMonth() === 1 && date.getDate() === 29
+    const isLeapYear = (year: number) => {
+      return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0
     }
-  }, [joiningDate])
+
+    if (isFebruary29 && !isLeapYear(nextYear.getFullYear())) {
+      // If it's Feb 29 and next year is not a leap year, use March 1
+      nextYear.setMonth(2) // March (0-indexed)
+      nextYear.setDate(1) // 1st day
+    }
+
+    setExpirationDate(nextYear)
+  }
+
+  // Find the handleDobChange function and replace it with this improved version:
+  const handleDobChange = (date: Date) => {
+    setDob(date)
+  }
+
+  // Find the handleAnniversaryDateChange function and replace it with this improved version:
+  const handleAnniversaryDateChange = (date: Date) => {
+    setAnniversaryDate(date)
+  }
+
+  // Remove the useEffect for calculating expiration date since we're now doing it in the handleJoiningDateChange function
+  // Find and remove this useEffect block:
 
   // Function to compress image
   const compressImage = (file: File, maxWidth = 800, maxHeight = 800, quality = 0.7): Promise<Blob> => {
@@ -349,19 +364,6 @@ export default function MembershipForm() {
     setPage(1)
     // Scroll to top when moving to previous page
     window.scrollTo({ top: 0, behavior: "smooth" })
-  }
-
-  // Handle date changes
-  const handleJoiningDateChange = (date: Date) => {
-    setJoiningDate(date)
-  }
-
-  const handleDobChange = (date: Date) => {
-    setDob(date)
-  }
-
-  const handleAnniversaryDateChange = (date: Date) => {
-    setAnniversaryDate(date)
   }
 
   // Format date to YYYY-MM-DD
@@ -650,7 +652,9 @@ export default function MembershipForm() {
     <form onSubmit={handleSubmit} className="lg:w-[56%] mx-auto pb-12  w-[100%]">
       {/* Restored the top heading card */}
       <div className="  md:p-0 md:mb-8 p-1 mb-4">
-        <h1 className="text-[24px] leading-[28px] md:text-[45px] md:leading-[50px] font-bold text-white mb-2 font-movatif">RolBol Membership Registration</h1>
+        <h1 className="text-[24px] leading-[28px] md:text-[45px] md:leading-[50px] font-bold text-white mb-2 font-movatif">
+          RolBol Membership Registration
+        </h1>
         <p className="text-gray-300 noto-sans">Please fill out the form to complete your membership registration.</p>
       </div>
 
@@ -782,7 +786,7 @@ export default function MembershipForm() {
               </div>
 
               {/* PRIMARY DETAILS SECTION */}
-              <div className="bg-[#f5f5f5]/10 backdrop-blur-[20px] relative -z-[1] rounded-lg border border-[#2b2b2b80]  md:p-8 md:mb-8 p-4 mb-4">
+              <div className="bg-[#f5f5f5]/10 backdrop-blur-[20px] relative  rounded-lg border border-[#2b2b2b80]  md:p-8 md:mb-8 p-4 mb-4">
                 {/* Removed section heading */}
 
                 <div className="space-y-8">

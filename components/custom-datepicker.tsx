@@ -36,6 +36,10 @@ export default function CustomDatepicker({
 
   const calendarRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const dateFieldRef = useRef<HTMLDivElement>(null)
+  const dayInputRef = useRef<HTMLInputElement>(null)
+  const monthInputRef = useRef<HTMLInputElement>(null)
+  const yearInputRef = useRef<HTMLInputElement>(null)
 
   // Format date for display
   const formatDate = (day: string, month: string, year: string) => {
@@ -86,12 +90,17 @@ export default function CustomDatepicker({
         setYear(newYear)
       }
     }
-  }, [selectedDate, day, month, year])
+  }, [selectedDate]) // Remove day, month, year from dependencies to prevent re-sync loops
 
   // Handle click outside to close calendar
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (calendarRef.current && !calendarRef.current.contains(e.target as Node)) {
+      if (
+        calendarRef.current &&
+        !calendarRef.current.contains(e.target as Node) &&
+        dateFieldRef.current &&
+        !dateFieldRef.current.contains(e.target as Node)
+      ) {
         setIsCalendarOpen(false)
       }
     }
@@ -123,9 +132,13 @@ export default function CustomDatepicker({
         setDay(validDay)
 
         // Auto-advance to month if two digits entered
-        if (validDay.length === 2) {
-          setInputType("month")
-          setTimeout(() => inputRef.current?.focus(), 10)
+        if (validDay.length === 2 && monthInputRef.current) {
+          monthInputRef.current.focus()
+        }
+
+        // Update the date if we have all parts
+        if (validDay && month && year && month.length === 2 && year.length === 4) {
+          updateSelectedDate(validDay, month, year)
         }
       }
     } else if (type === "month") {
@@ -141,15 +154,34 @@ export default function CustomDatepicker({
         setMonth(validMonth)
 
         // Auto-advance to year if two digits entered
-        if (validMonth.length === 2) {
-          setInputType("year")
-          setTimeout(() => inputRef.current?.focus(), 10)
+        if (validMonth.length === 2 && yearInputRef.current) {
+          yearInputRef.current.focus()
+        }
+
+        // Update the date if we have all parts
+        if (day && validMonth && year && day.length === 2 && year.length === 4) {
+          updateSelectedDate(day, validMonth, year)
         }
       }
     } else if (type === "year") {
       if (numericValue.length <= 4) {
         setYear(numericValue)
+
+        // Update the date if we have all parts and year is complete
+        if (day && month && numericValue.length === 4 && day.length === 2 && month.length === 2) {
+          updateSelectedDate(day, month, numericValue)
+        }
       }
+    }
+  }
+
+  // Helper function to update the selected date
+  const updateSelectedDate = (day: string, month: string, year: string) => {
+    const newDate = new Date(Number.parseInt(year), Number.parseInt(month) - 1, Number.parseInt(day))
+
+    // Only update if the date is valid
+    if (!isNaN(newDate.getTime())) {
+      onChange(newDate)
     }
   }
 
@@ -157,12 +189,10 @@ export default function CustomDatepicker({
   const handleKeyDown = (e: React.KeyboardEvent, type: "day" | "month" | "year") => {
     // Handle backspace when field is empty to move to previous field
     if (e.key === "Backspace") {
-      if (type === "month" && !month) {
-        setInputType("day")
-        setTimeout(() => inputRef.current?.focus(), 10)
-      } else if (type === "year" && !year) {
-        setInputType("month")
-        setTimeout(() => inputRef.current?.focus(), 10)
+      if (type === "month" && !month && dayInputRef.current) {
+        dayInputRef.current.focus()
+      } else if (type === "year" && !year && monthInputRef.current) {
+        monthInputRef.current.focus()
       }
     }
   }
@@ -175,6 +205,14 @@ export default function CustomDatepicker({
     setYear(String(date.getFullYear()))
     setIsCalendarOpen(false)
     onChange(date)
+  }
+
+  // Toggle calendar open/close
+  const toggleCalendar = (e: React.MouseEvent) => {
+    // Only toggle if clicking on the container, not on the input fields
+    if (!(e.target as HTMLElement).matches("input")) {
+      setIsCalendarOpen(!isCalendarOpen)
+    }
   }
 
   // Generate calendar days
@@ -222,95 +260,63 @@ export default function CustomDatepicker({
 
       {/* Date input field with calendar icon */}
       <div className="relative flex items-center">
-        <div className="relative flex-grow bg-transparent border border-[#2b2b2b] rounded-md focus-within:border-purple-500 transition-colors">
+        <div
+          ref={dateFieldRef}
+          className="relative flex-grow bg-transparent border border-[#2b2b2b] rounded-md focus-within:border-purple-500 transition-colors"
+          onClick={(e) => toggleCalendar(e)}
+        >
           {/* Always show the editable fields */}
           <div className="flex items-center px-3 py-2">
             {/* Day input */}
-            {inputType === "day" ? (
-              <input
-                ref={inputRef}
-                type="text"
-                value={day}
-                onChange={(e) => handleInputChange(e.target.value, "day")}
-                onKeyDown={(e) => handleKeyDown(e, "day")}
-                className="w-6 bg-transparent text-gray-200 focus:outline-none text-center placeholder:font-thin"
-                placeholder="DD"
-                maxLength={2}
-                autoFocus
-              />
-            ) : (
-              <span
-                className="text-gray-200 w-6 text-center cursor-text"
-                onClick={() => {
-                  setInputType("day")
-                  setTimeout(() => inputRef.current?.focus(), 10)
-                }}
-              >
-                {day || "DD"}
-              </span>
-            )}
+            <input
+              ref={dayInputRef}
+              type="text"
+              value={day}
+              onChange={(e) => handleInputChange(e.target.value, "day")}
+              onKeyDown={(e) => handleKeyDown(e, "day")}
+              className="w-6 bg-transparent text-gray-200 focus:outline-none text-center placeholder:font-thin"
+              placeholder="DD"
+              maxLength={2}
+              onClick={(e) => e.stopPropagation()}
+            />
 
             <span className="text-gray-500 mx-1">-</span>
 
             {/* Month input */}
-            {inputType === "month" ? (
-              <input
-                ref={inputRef}
-                type="text"
-                value={month}
-                onChange={(e) => handleInputChange(e.target.value, "month")}
-                onKeyDown={(e) => handleKeyDown(e, "month")}
-                className="w-6 bg-transparent text-gray-200 focus:outline-none text-center placeholder:font-thin"
-                placeholder="MM"
-                maxLength={2}
-                autoFocus
-              />
-            ) : (
-              <span
-                className="text-gray-200 w-6 text-center cursor-text"
-                onClick={() => {
-                  setInputType("month")
-                  setTimeout(() => inputRef.current?.focus(), 10)
-                }}
-              >
-                {month || "MM"}
-              </span>
-            )}
+            <input
+              ref={monthInputRef}
+              type="text"
+              value={month}
+              onChange={(e) => handleInputChange(e.target.value, "month")}
+              onKeyDown={(e) => handleKeyDown(e, "month")}
+              className="w-6 bg-transparent text-gray-200 focus:outline-none text-center placeholder:font-thin"
+              placeholder="MM"
+              maxLength={2}
+              onClick={(e) => e.stopPropagation()}
+            />
 
             <span className="text-gray-500 mx-1">-</span>
 
             {/* Year input */}
-            {inputType === "year" ? (
-              <input
-                ref={inputRef}
-                type="text"
-                value={year}
-                onChange={(e) => handleInputChange(e.target.value, "year")}
-                onKeyDown={(e) => handleKeyDown(e, "year")}
-                className="w-12 bg-transparent text-gray-200 focus:outline-none text-center placeholder:font-thin"
-                placeholder="YYYY"
-                maxLength={4}
-                autoFocus
-              />
-            ) : (
-              <span
-                className="text-gray-200 w-12 text-center cursor-text"
-                onClick={() => {
-                  setInputType("year")
-                  setTimeout(() => inputRef.current?.focus(), 10)
-                }}
-              >
-                {year || "YYYY"}
-              </span>
-            )}
+            <input
+              ref={yearInputRef}
+              type="text"
+              value={year}
+              onChange={(e) => handleInputChange(e.target.value, "year")}
+              onKeyDown={(e) => handleKeyDown(e, "year")}
+              className="w-12 bg-transparent text-gray-200 focus:outline-none text-center placeholder:font-thin"
+              placeholder="YYYY"
+              maxLength={4}
+              onClick={(e) => e.stopPropagation()}
+            />
           </div>
         </div>
 
         {/* Calendar icon button */}
         <button
           type="button"
-          onClick={() => setIsCalendarOpen(!isCalendarOpen)}
-          className="absolute right-3  transform  text-gray-400 hover:text-gray-200 focus:outline-none"
+          onClick={(e) => toggleCalendar(e)}
+          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-200 focus:outline-none"
         >
           <Calendar className="h-4 w-4" />
         </button>
