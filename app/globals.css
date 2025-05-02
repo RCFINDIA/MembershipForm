@@ -1,0 +1,443 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@font-face {
+  font-family: 'Movatif';
+  src: url('/fonts/movatif-regular.otf') format('opentype');
+
+  font-style: normal;
+}
+
+.font-movatif{
+  font-family: 'Movatif', sans-serif;
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  --background: 0 0% 98%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 221.2 83.2% 53.3%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 221.2 83.2% 53.3%;
+  --radius: 0.5rem;
+}
+.noto-sans{
+  font-family: 'Noto Sans', sans-serif;
+}
+body {
+  @apply bg-black text-white font-sans;
+}
+
+/* Add these styles to match v27 form field design */
+
+/* Update select styling */
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1em;
+  padding-right: 2.5rem;
+}
+
+/* Update focus styles to remove border focus and only use ring */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: #7c3aed;
+  box-shadow: none;
+}
+
+/* Update placeholder color and font-weight */
+::placeholder {
+  color: rgba(245, 245, 245, 0.5); /* [#f5f5f5]/50 */
+  font-weight: 100;
+}
+
+/* For Firefox */
+::-moz-placeholder {
+  color: rgba(245, 245, 245, 0.5); /* [#f5f5f5]/50 */
+  opacity: 1;
+  font-weight: 100;
+}
+
+/* For Microsoft Edge */
+::-ms-input-placeholder {
+  color: rgba(245, 245, 245, 0.5); /* [#f5f5f5]/50 */
+  font-weight: 100;
+}
+
+/* Update hover styles to not change border since there is none */
+input:hover:not(:disabled),
+textarea:hover:not(:disabled),
+select:hover:not(:disabled) {
+  background-color: transparent;
+  border-color: #3d3d3d;
+}
+
+/* Update form field styles to remove borders and match v27 background */
+input,
+textarea,
+select {
+  background-color: transparent;
+  border: 1px solid #2b2b2b;
+  border-radius: 0.375rem;
+  color: #e5e7eb;
+  transition: all 0.2s ease;
+}
+
+/* Disabled field styles */
+input:disabled,
+textarea:disabled,
+select:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Enhanced dropdown styling */
+select option {
+  background-color: #5b5b5c;
+  color: #e5e7eb;
+  padding: 0.5rem;
+}
+
+/* Style for select placeholder option */
+select option[value=""][disabled] {
+  color: rgba(245, 245, 245, 0.5); /* [#f5f5f5]/50 */
+  font-weight: 100 !important;
+}
+
+.gradient-border-top::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 8px;
+  width: 100%;
+  background: linear-gradient(to right, #6D78EB, #53D5E8, #6A81EB, #794CEC);
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+}
+
+
+/* Ensure font-thin is applied to all placeholder text */
+::placeholder,
+::-moz-placeholder,
+::-ms-input-placeholder,
+select option[disabled] {
+  font-weight: 100 !important;
+}
+
+
+
+/* Smooth transitions */
+.transition-colors {
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.transition-all {
+  transition: all 0.2s ease;
+}
+
+/* Glassmorphism */
+.backdrop-blur-[20px] {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+
+/* Required field indicator */
+.text-red-400 {
+  color: #f87171;
+}
+
+/* Form group spacing */
+.form-group:not(:last-child) {
+  margin-bottom: 1.5rem;
+}
+
+/* Button hover effects */
+button:hover {
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .w-\[70\%\] {
+    width: 85%;
+  }
+}
+
+@media (max-width: 768px) {
+  .w-\[70\%\] {
+    width: 95%;
+  }
+}
+
+@media (max-width: 640px) {
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  .space-y-8 {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
+  }
+
+  .p-8 {
+    padding: 1rem;
+  }
+}
+
+/* Calendar dark mode */
+.bg-gray-900 .react-calendar {
+  background-color: #1f2937;
+  color: white;
+  border-color: #374151;
+}
+
+.bg-gray-900 .react-calendar__tile {
+  color: white;
+}
+
+.bg-gray-900 .react-calendar__tile:enabled:hover,
+.bg-gray-900 .react-calendar__tile:enabled:focus {
+  background-color: #a855f7;
+}
+
+.bg-gray-900 .react-calendar__tile--active {
+  background-color: #3b82f6;
+}
+
+.bg-gray-900 .react-calendar__navigation button:enabled:hover,
+.bg-gray-900 .react-calendar__navigation button:enabled:focus {
+  background-color: #a855f7;
+}
+
+/* Ensure images are properly loaded */
+[style*="background-image"] {
+  background-repeat: no-repeat;
+}
+
+/* Set z-index for Radix popper content wrappers to 10 */
+[data-radix-popper-content-wrapper] {
+  z-index: 999 !important;
+}
+
+/* Style for all popovers to match the theme */
+
+.radix-themes {
+  --color-panel-solid: rgba(31, 41, 55, 0.8);
+  --color-panel-translucent: rgba(31, 41, 55, 0.8);
+}
+
+[role="dialog"],
+[role="listbox"] {
+  background-color: rgba(31, 41, 55, 0.85) !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  border: 1px solid rgba(75, 85, 99, 0.3) !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Complete calendar styling overhaul */
+/* Force dark background and light text for all calendar elements */
+.react-calendar {
+  background-color: #1f2937 !important;
+  border: 1px solid #374151 !important;
+  border-radius: 0.5rem !important;
+  color: white !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
+  font-family: inherit !important;
+  width: 350px !important;
+  max-width: 100% !important;
+  padding: 0.75rem !important;
+}
+
+/* Calendar navigation (month/year) */
+.react-calendar__navigation {
+  display: flex !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.react-calendar__navigation button {
+  min-width: 44px !important;
+  background: none !important;
+  font-size: 16px !important;
+  color: white !important;
+  border-radius: 0.25rem !important;
+  padding: 0.5rem !important;
+}
+
+.react-calendar__navigation button:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+.react-calendar__navigation button:enabled:hover,
+.react-calendar__navigation button:enabled:focus {
+  background-color: #374151 !important;
+}
+
+.react-calendar__navigation__label__labelText {
+  font-weight: bold !important;
+  color: white !important;
+}
+
+/* Weekday headers */
+.react-calendar__month-view__weekdays {
+  text-align: center !important;
+  text-transform: uppercase !important;
+  font-weight: bold !important;
+  font-size: 0.75rem !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.react-calendar__month-view__weekdays__weekday {
+  padding: 0.5rem !important;
+  color: white !important;
+}
+
+.react-calendar__month-view__weekdays__weekday abbr {
+  text-decoration: none !important;
+}
+
+/* Calendar days */
+.react-calendar__month-view__days__day {
+  color: white !important;
+  font-weight: normal !important;
+}
+
+.react-calendar__tile {
+  max-width: 100% !important;
+  padding: 0.75rem 0.5rem !important;
+  background: none !important;
+  text-align: center !important;
+  line-height: 16px !important;
+  font-size: 14px !important;
+  border-radius: 0.25rem !important;
+}
+
+.react-calendar__tile:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+  background-color: transparent !important;
+}
+
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background-color: #374151 !important;
+}
+
+.react-calendar__tile--now {
+  background-color: #4b5563 !important;
+  color: white !important;
+}
+
+/* Fix for selected dates - use purple instead of white */
+.react-calendar__tile--active,
+.react-calendar__tile--active:enabled:hover,
+.react-calendar__tile--active:enabled:focus {
+  background-color: #7c3aed !important; /* Purple to match radio buttons */
+  color: white !important;
+  font-weight: bold !important;
+}
+
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: #9ca3af !important;
+}
+
+/* Year and decade view */
+.react-calendar__year-view .react-calendar__tile,
+.react-calendar__decade-view .react-calendar__tile,
+.react-calendar__century-view .react-calendar__tile {
+  padding: 1.5rem 0.5rem !important;
+  color: white !important;
+}
+
+/* Fix for today's date highlight */
+.react-calendar__tile--now:enabled:hover,
+.react-calendar__tile--now:enabled:focus {
+  background-color: #4b5563 !important;
+}
+
+/* Fix for selected today's date */
+.react-calendar__tile--now.react-calendar__tile--active {
+  background-color: #7c3aed !important;
+}
+
+/* Fix for the current date selection ring */
+.react-calendar__tile--hasActive {
+  background-color: #7c3aed !important;
+}
+
+/* Fix for the range selection */
+.react-calendar__tile--rangeStart,
+.react-calendar__tile--rangeEnd {
+  background-color: #7c3aed !important;
+  color: white !important;
+}
+
+/* Hide scrollbars but keep functionality */
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+/* Ensure datepicker is always on top */
+#date-picker-container {
+  z-index: 9999 !important;
+}
+
+/* Custom scrollbar for Chrome, Safari and Opera */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(31, 41, 55, 0.2);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(124, 41, 255, 0.5);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(124, 41, 255, 0.7);
+}
+
+/* For Firefox */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(124, 41, 255, 0.5) rgba(31, 41, 55, 0.2);
+}
